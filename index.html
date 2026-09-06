@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly OC Mathematical Reasoning Quiz</title>
+    <style>
+        :root {
+            --primary-color: #0070c0;
+            --primary-hover: #005694;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #cccccc;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Top Bar with Floating Timer strictly placed on Top-Left */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .timer-box {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--danger-color);
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 8px 15px;
+            border-radius: 5px;
+            visibility: hidden; /* Hidden until passcode entered and "Open Test" is clicked */
+        }
+
+        .portal-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        /* Main Container centered with 1200px boundary limit */
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* Screen state displays */
+        .screen {
+            display: none; /* Hides elements completely when active-screen is not present */
+        }
+        .active-screen {
+            display: block; /* Shows elements when active */
+        }
+
+        /* Card Base Styles */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* Access Control Screen Styles */
+        #auth-screen {
+            max-width: 500px;
+            margin: 60px auto;
+            text-align: center;
+        }
+        #auth-screen h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .auth-container {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .code-input {
+            font-size: 2rem;
+            letter-spacing: 8px;
+            text-align: center;
+            width: 220px;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+            font-family: monospace;
+            transition: border-color 0.2s;
+        }
+        .code-input:focus {
+            border-color: var(--primary-color);
+        }
+        .error-message {
+            color: var(--danger-color);
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: none; /* Hidden by default */
+        }
+
+        /* Short Question Layout (occupies exactly the Left Half of the screen) */
+        .layout-short {
+            max-width: 580px;
+            width: 100%;
+            margin: 20px auto 20px 0; /* Align perfectly to the left */
+        }
+
+        /* Split (Long) Question Layout (50/50 split with a vertical line) */
+        .layout-split {
+            max-width: 1200px;
+            width: 100%;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr;
+            gap: 35px;
+            align-items: stretch;
+        }
+
+        /* Middle Vertical Line */
+        .split-divider {
+            background-color: var(--border-color);
+            width: 2px;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Collapse / Expand slider button on the vertical line (simulating real exam UI) */
+        .split-divider::after {
+            content: "◀ ▶";
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: #777;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px 3px;
+            position: absolute;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Split Panels */
+        .split-left {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .split-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .short-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Welcome Landing Screen */
+        #landing-screen {
+            text-align: center;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        #landing-screen h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        #landing-screen p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Progress Tracker */
+        .q-progress {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        /* Question Text Elements */
+        .q-text, .stimulus-content {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .directed-question {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Digit Cards visual stylings to simulate the fig1.png attachment */
+        .cards-visual {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        .card-circle {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #555;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            background-color: #fffdf6;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        /* Answers listed down one by one */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-card {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .option-card:hover {
+            background-color: #f8f9fa;
+            border-color: #999;
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-color);
+            background-color: #e7f1ff;
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
+
+        .option-card input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+
+        .option-text {
+            font-size: 1.05rem;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        /* Test Navigation Controls */
+        .nav-btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-start {
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+        }
+        .btn-start:hover {
+            background-color: #218838;
+        }
+
+        .btn-nav {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-nav:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-disabled {
+            background-color: #e9ecef;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+        .btn-disabled:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Results Screen Styles */
+        #results-screen {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        #results-screen h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e7f1ff;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px auto;
+            border: 5px solid var(--primary-color);
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-table th {
+            background-color: #f8f9fa;
+        }
+
+        .status-correct {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .status-incorrect {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        /* Responsive Mobile Layout (grids collapse into single vertical blocks) */
+        @media (max-width: 768px) {
+            .layout-split {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .split-divider {
+                display: none;
+            }
+            .layout-short {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <!-- Countdown Timer strictly in the Top-Left -->
+        <div id="timer" class="timer-box">Time Remaining: 08:00</div>
+        <div class="portal-title">OC Weekly Practice Portal</div>
+    </div>
+
+    <div class="main-container">
+        
+        <!-- Access Gate Screen (First visible component) -->
+        <div id="auth-screen" class="card screen active-screen">
+            <h2>Access Practice Portal</h2>
+            <p>This page is locked. Enter the 6-digit passcode provided by your tutor to open the test environment.</p>
+            <div class="auth-container">
+                <input type="text" id="passcode-field" class="code-input" maxlength="6" placeholder="000000" onkeydown="handleEnterKey(event)">
+                <div id="auth-error" class="error-message">Incorrect passcode. Please check and try again.</div>
+                <button class="btn btn-nav" onclick="verifyPasscode()">Unlock Portal</button>
+            </div>
+        </div>
+
+        <!-- Welcome Landing Screen (Visible only after typing the correct passcode) -->
+        <div id="landing-screen" class="card screen">
+            <h1>Welcome to your Practice Test</h1>
+            <p>This practice exam features exactly <strong>4 Mathematical Reasoning questions</strong> selected for this week's tutoring session. You will have exactly <strong>8 minutes</strong> to complete the test.</p>
+            <p>Once you click <strong>Open Test</strong>, the timer will begin in the top-left. If time runs out, your selected answers will be submitted automatically. No calculators are permitted.</p>
+            <button class="btn btn-start" onclick="startTest()">Open Test</button>
+        </div>
+
+        <!-- Active Test Screen -->
+        <div id="test-screen" class="screen">
+            <div id="question-card">
+                <!-- Dynamically populated short or split layout card -->
+            </div>
+        </div>
+
+        <!-- Summary Results Screen -->
+        <div id="results-screen" class="card screen">
+            <h2>Test Completed</h2>
+            <div class="score-circle" id="score-text">0 / 0</div>
+            <p style="text-align: center;">Review your results below. Understanding your pacing and checking mistakes is key to mastering the computer-based exam format.</p>
+            <div style="overflow-x: auto;">
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Your Answer</th>
+                            <th>Correct Answer</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summary-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // CENTRAL QUESTION BANK (Indices 1 to 8)
+        const questionBank = [
+            {
+                id: 1,
+                type: "short",
+                text: "An item has its price decreased by 26%. By what percentage should the price be increased to recover the original price?",
+                options: ["35 5/37 %", "16 12/43 %", "28 8/39 %", "26 %", "38 8/9 %"],
+                correctAnswer: "A"
+            },
+            {
+                id: 2,
+                type: "short",
+                text: "There are two items. The second weighs 12 times as much as the first. If the total weight is 1716, what is the weight of the lighter item?",
+                options: ["1584", "132", "37", "121", "143"],
+                correctAnswer: "B"
+            },
+            {
+                id: 3,
+                type: "short",
+                text: "⬡ represents a number. 67 − ⬡ = 32 + 17. What number is ⬡?",
+                options: ["17", "18", "32", "49", "116"],
+                correctAnswer: "B"
+            },
+            {
+                id: 4,
+                type: "short",
+                text: "What number is six hundreds less than 74,251?",
+                options: ["70,251", "70,051", "73,651", "73,751", "74,191"],
+                correctAnswer: "C"
+            },
+            {
+                id: 5,
+                type: "long",
+                stimulus: `
+                    <h3>Digit Cards:</h3>
+                    <p>Here are three cards showing digits made of horizontal and vertical lines:</p>
+                    <div class="cards-visual">
+                        <div class="card-circle">4</div>
+                        <div class="card-circle">5</div>
+                        <div class="card-circle">6</div>
+                    </div>
+                `,
+                directedQuestion: "If you choose two different cards, what is the largest possible number of right angles you can count in your digits?",
+                options: ["7", "8", "9", "10", "11"],
+                correctAnswer: "D"
+            },
+            {
+                id: 6,
+                type: "long",
+                stimulus: `
+                    <h3>Claire's Grid Movement:</h3>
+                    <p>Claire is standing at the X in the centre of a grid map. She follows these instructions, one after the other:</p>
+                    <ol>
+                        <li>Walk 30 metres north.</li>
+                        <li>Walk 20 metres east.</li>
+                        <li>Walk 70 metres south.</li>
+                        <li>Walk 20 metres west.</li>
+                    </ol>
+                `,
+                directedQuestion: "After completing these movements, how far is Claire from her starting position?",
+                options: ["0 metres", "4 metres", "30 metres", "40 metres", "140 metres"],
+                correctAnswer: "D"
+            },
+            {
+                id: 7,
+                type: "long",
+                stimulus: `
+                    <h3>Container Water Transfer:</h3>
+                    <p>Container X contains 35 mL of water. Container Y contains 60 mL of water.</p>
+                    <p>Water is poured from X into Y until Y contains 80 mL altogether.</p>
+                `,
+                directedQuestion: "How much water is left in container X?",
+                options: ["5 mL", "10 mL", "15 mL", "20 mL", "25 mL"],
+                correctAnswer: "C"
+            },
+            {
+                id: 8,
+                type: "long",
+                stimulus: `
+                    <h3>The Leg Puzzle:</h3>
+                    <p>In a farm there are only chickens and cows. Each chicken has 2 legs and each cow has 4 legs.</p>
+                    <p>The total number of animals is 27 and the total number of legs is 76.</p>
+                `,
+                directedQuestion: "How many chickens are there in the farm?",
+                options: ["20", "16", "10", "11", "18"],
+                correctAnswer: "B"
+            },
+            {
+                id: 9,
+                type: "long",
+                stimulus: `
+                    <p>The shape below is made up of 12 small squares, all the same size.</p>
+                    <p>Three of the squares are already shaded.</p>
+                    <svg viewBox="0 0 260 170" width="100%" style="max-width: 260px; display: block; margin: 15px auto;">
+                    <!-- Shaded Cell (1,1) -->
+                    <rect x="10" y="10" width="60" height="50" fill="#93c5fd" />
+                    <!-- Shaded Cell (2,2) -->
+                    <rect x="70" y="60" width="60" height="50" fill="#93c5fd" />
+                    <!-- Shaded Cell (3,3) -->
+                    <rect x="130" y="110" width="60" height="50" fill="#93c5fd" />
+                    <!-- Table Outer Border -->
+                    <rect x="10" y="10" width="240" height="150" fill="none" stroke="#1e293b" stroke-width="2" rx="2" />
+                    <!-- Vertical Columns -->
+                    <line x1="70" y1="10" x2="70" y2="160" stroke="#475569" stroke-width="1.5" />
+                    <line x1="130" y1="10" x2="130" y2="160" stroke="#475569" stroke-width="1.5" />
+                    <line x1="190" y1="10" x2="190" y2="160" stroke="#475569" stroke-width="1.5" />
+                    <!-- Horizontal Rows -->
+                    <line x1="10" y1="60" x2="250" y2="60" stroke="#475569" stroke-width="1.5" />
+                    <line x1="10" y1="110" x2="250" y2="110" stroke="#475569" stroke-width="1.5" />
+                    </svg>
+                `,
+                directedQuestion: "How many more small squares need to be shaded so that two-thirds of the shape is shaded?",
+                options: ["3", "4", "5", "6", "8"],
+                correctAnswer: "C"
+            },
+            {
+                id: 10,
+                type: "short",
+                text: "If each of these numbers is rounded to the nearest hundred, which number changes the most?",
+                options: ["120", "240", "155", "350", "499"],
+                correctAnswer: "D"
+            }
+        ];
+
+        // CONFIGURATION: Set the default questions for fallback (1-indexed question numbers)
+        const defaultQuestions = [4,3,9,10]; 
+        
+        let questions = []; // Active list of 4 loaded questions
+        let currentQ = 0;
+        let userAnswers = [];
+        let timer;
+        let secondsLeft = 8 * 60; // Set to exactly 8 minutes
+
+        // Setup dynamic questions based on URL parameters on page load
+        function setupWeeklyExam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const qParam = urlParams.get('q');
+            let activeIDs = defaultQuestions;
+
+            if (qParam) {
+                // Parse comma-separated list of question numbers from URL (e.g. ?q=3,4,7,8)
+                const parsedIDs = qParam.split(',')
+                                         .map(num => parseInt(num.trim()))
+                                         .filter(num => !isNaN(num) && num >= 1 && num <= questionBank.length);
+                if (parsedIDs.length > 0) {
+                    activeIDs = parsedIDs;
+                }
+            }
+
+            // Lock the exam strictly to 4 questions
+            activeIDs = activeIDs.slice(0, 4);
+            while (activeIDs.length < 4) {
+                // If fewer than 4 valid questions are provided, fill with sequential items
+                activeIDs.push(1);
+            }
+
+            // Extract selected questions from the central question bank
+            questions = activeIDs.map(id => questionBank.find(q => q.id === id));
+            userAnswers = Array(questions.length).fill(null);
+        }
+
+        // Run the setup immediately
+        setupWeeklyExam();
+
+        // Code Access Gate Verification
+        function verifyPasscode() {
+            const inputVal = document.getElementById('passcode-field').value.trim();
+            const errorMsg = document.getElementById('auth-error');
+            
+            if (inputVal === '112233') {
+                errorMsg.style.display = 'none';
+                document.getElementById('auth-screen').classList.remove('active-screen');
+                document.getElementById('landing-screen').classList.add('active-screen');
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('passcode-field').value = '';
+                document.getElementById('passcode-field').focus();
+            }
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                verifyPasscode();
+            }
+        }
+
+        function startTest() {
+            document.getElementById('landing-screen').classList.remove('active-screen');
+            document.getElementById('test-screen').classList.add('active-screen');
+            document.getElementById('timer').style.visibility = 'visible';
+            loadQuestion(0);
+            startTimer();
+        }
+
+        function loadQuestion(index) {
+            currentQ = index;
+            const q = questions[index];
+            const cardContainer = document.getElementById('question-card');
+            
+            if (q.type === 'long') {
+                cardContainer.className = "card layout-split";
+                cardContainer.innerHTML = `
+                    <div class="split-left">
+                        <div class="q-progress">Question ${index + 1} of ${questions.length}</div>
+                        <div class="stimulus-content">${q.stimulus}</div>
+                    </div>
+                    <div class="split-divider"></div>
+                    <div class="split-right">
+                        <div>
+                            <div class="directed-question">${q.directedQuestion}</div>
+                            <div class="options-container">
+                                ${getOptionsHtml(index)}
+                            </div>
+                        </div>
+                        <div class="nav-btn-container">
+                            <button id="back-btn" class="btn btn-secondary" onclick="prevPage()">Back</button>
+                            <button id="next-btn" class="btn btn-nav" onclick="nextPage()">Next</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                cardContainer.className = "card layout-short";
+                cardContainer.innerHTML = `
+                    <div class="short-content">
+                        <div class="q-progress">Question ${index + 1} of ${questions.length}</div>
+                        <div class="q-text">${q.text}</div>
+                        <div class="options-container">
+                            ${getOptionsHtml(index)}
+                        </div>
+                        <div class="nav-btn-container">
+                            <button id="back-btn" class="btn btn-secondary" onclick="prevPage()">Back</button>
+                            <button id="next-btn" class="btn btn-nav" onclick="nextPage()">Next</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateButtonStates(index);
+        }
+
+        function getOptionsHtml(index) {
+            const q = questions[index];
+            const letters = ["A", "B", "C", "D", "E"];
+            return q.options.map((opt, i) => {
+                const letter = letters[i];
+                const isSelected = userAnswers[index] === letter;
+                return `
+                    <div class="option-card ${isSelected ? 'selected' : ''}" onclick="selectOption('${letter}')">
+                        <input type="radio" name="options" id="opt-${letter}" value="${letter}" ${isSelected ? 'checked' : ''}>
+                        <label for="opt-${letter}" class="option-text"><strong>${letter}:</strong> ${opt}</label>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectOption(letter) {
+            userAnswers[currentQ] = letter;
+            const cards = document.querySelectorAll('.option-card');
+            const letters = ["A", "B", "C", "D", "E"];
+            cards.forEach((card, i) => {
+                const currentLetter = letters[i];
+                const radio = card.querySelector('input[type="radio"]');
+                if (currentLetter === letter) {
+                    card.classList.add('selected');
+                    if (radio) radio.checked = true;
+                } else {
+                    card.classList.remove('selected');
+                    if (radio) radio.checked = false;
+                }
+            });
+        }
+
+        function nextPage() {
+            if (currentQ < questions.length - 1) {
+                loadQuestion(currentQ + 1);
+            }
+        }
+
+        function prevPage() {
+            if (currentQ > 0) {
+                loadQuestion(currentQ - 1);
+            }
+        }
+
+        function updateButtonStates(index) {
+            const backBtn = document.getElementById('back-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            if (index === 0) {
+                backBtn.classList.add('btn-disabled');
+                backBtn.disabled = true;
+            } else {
+                backBtn.classList.remove('btn-disabled');
+                backBtn.disabled = false;
+            }
+
+            if (index === questions.length - 1) {
+                nextBtn.innerText = "Submit Test";
+                nextBtn.onclick = submitTest;
+            } else {
+                nextBtn.innerText = "Next";
+                nextBtn.onclick = nextPage;
+            }
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                secondsLeft--;
+                updateTimerDisplay();
+                if (secondsLeft <= 0) {
+                    clearInterval(timer);
+                    alert("Time is up! Your answers have been automatically submitted.");
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(secondsLeft / 60);
+            const seconds = secondsLeft % 60;
+            document.getElementById('timer').innerText = `Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function submitTest() {
+            clearInterval(timer);
+            document.getElementById('test-screen').classList.remove('active-screen');
+            document.getElementById('results-screen').classList.add('active-screen');
+            document.getElementById('timer').style.visibility = 'hidden';
+            
+            let score = 0;
+            let summaryHtml = '';
+            questions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correctAnswer;
+                if (isCorrect) score++;
+                
+                summaryHtml += `
+                    <tr>
+                        <td>Question ${idx + 1} (Bank #${q.id})</td>
+                        <td>${userAns || 'No Answer'}</td>
+                        <td>${q.correctAnswer}</td>
+                        <td class="${isCorrect ? 'status-correct' : 'status-incorrect'}">${isCorrect ? 'Correct' : 'Incorrect'}</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('score-text').innerText = `${score} / ${questions.length}`;
+            document.getElementById('summary-body').innerHTML = summaryHtml;
+        }
+    </script>
+</body>
+</html>
