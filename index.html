@@ -585,11 +585,85 @@
                 text: "If each of these numbers is rounded to the nearest hundred, which number changes the most?",
                 options: ["120", "240", "155", "350", "499"],
                 correctAnswer: "D"
+            },
+            {
+                id: 11,
+                type: "short",
+                text: "Oscar makes a bracelet by threading beads onto a string. He makes the bracelet by repeating this step: Add 3 green beads and then 4 yellow beads onto the string. If the finished bracelet has 16 yellow beads, how many green beads does it have?",
+                options: ["4", "9", "12", "16", "20"],
+                correctAnswer: "C"
+            },
+            {
+                id: 12,
+                type: "short",
+                text: "Here are the first five terms of a number sequence: 5, 10, 20, 40, 80, ... What is the difference between the 4th term and the 6th term in this sequence?",
+                options: ["40", "60", "80", "100", "120"],
+                correctAnswer: "E"
+            },
+            {
+                id: 13,
+                type: "long",
+                stimulus: `
+                    <h3>Shaded Squares Puzzle</h3>
+                    <p>Here are three squares, X, Y and Z, each divided into equal parts, with some parts shaded:</p>
+                    <div class="graphic-container">
+                        <svg viewBox="0 0 540 110" width="100%" style="max-width: 500px; display: block; margin: 0 auto;">
+                            <!-- Square X (2x2 Grid) -->
+                            <g transform="translate(10, 20)">
+                                <text x="50" y="-8" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e293b">Square X</text>
+                                <!-- Shaded cell (1,1) -->
+                                <rect x="0" y="0" width="50" height="25" fill="#475569" />
+                                <!-- Outline & Grid lines -->
+                                <rect x="0" y="0" width="100" height="50" fill="none" stroke="#1e293b" stroke-width="2" />
+                                <line x1="50" y1="0" x2="50" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                                <line x1="0" y1="25" x2="100" y2="25" stroke="#1e293b" stroke-width="1.5" />
+                            </g>
+                            
+                            <!-- Square Y (4x2 Grid) -->
+                            <g transform="translate(160, 20)">
+                                <text x="80" y="-8" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e293b">Square Y</text>
+                                <!-- Shaded cells (1,1) and (2,1) -->
+                                <rect x="0" y="0" width="40" height="25" fill="#475569" />
+                                <rect x="40" y="0" width="40" height="25" fill="#475569" />
+                                <!-- Outline & Grid lines -->
+                                <rect x="0" y="0" width="160" height="50" fill="none" stroke="#1e293b" stroke-width="2" />
+                                <line x1="40" y1="0" x2="40" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                                <line x1="80" y1="0" x2="80" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                                <line x1="120" y1="0" x2="120" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                                <line x1="0" y1="25" x2="160" y2="25" stroke="#1e293b" stroke-width="1.5" />
+                            </g>
+                            
+                            <!-- Square Z (3x2 Grid) -->
+                            <g transform="translate(370, 20)">
+                                <text x="60" y="-8" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e293b">Square Z</text>
+                                <!-- Shaded cells (1,1) and (2,1) -->
+                                <rect x="0" y="0" width="40" height="25" fill="#475569" />
+                                <rect x="40" y="0" width="40" height="25" fill="#475569" />
+                                <!-- Outline & Grid lines -->
+                                <rect x="0" y="0" width="120" height="50" fill="none" stroke="#1e293b" stroke-width="2" />
+                                <line x1="40" y1="0" x2="40" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                                <line x1="80" y1="0" x2="80" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                                <line x1="0" y1="25" x2="120" y2="25" stroke="#1e293b" stroke-width="1.5" />
+                            </g>
+                        </svg>
+                    </div>
+                `,
+                directedQuestion: "Which of the squares have exactly one-quarter shaded?",
+                options: ["none of them", "square X only", "square Y only", "squares X and Y only", "squares Y and Z only"],
+                correctAnswer: "D"
+            },
+            {
+                id: 14,
+                type: "short",
+                text: "Jo has three cards showing the digits 6, 3, and 8. She uses all three cards to make different three-digit numbers. What is the difference between the largest three-digit number Jo can make, and the smallest three-digit number Jo can make?",
+                options: ["396", "495", "594", "693", "792"],
+                correctAnswer: "B"
             }
+
         ];
 
         // CONFIGURATION: Set the default questions for fallback (1-indexed question numbers)
-        const defaultQuestions = [4,3,9,10]; 
+        const defaultQuestions = [11,12,13,14]; 
         
         let questions = []; // Active list of 4 loaded questions
         let currentQ = 0;
