@@ -588,15 +588,19 @@
             },
             {
                 id: 11,
-                type: "short",
-                text: "Oscar makes a bracelet by threading beads onto a string. He makes the bracelet by repeating this step: Add 3 green beads and then 4 yellow beads onto the string. If the finished bracelet has 16 yellow beads, how many green beads does it have?",
+                type: "long",
+                stimulus: `
+                    <p>Oscar makes a bracelet by threading beads onto a string. He makes the bracelet by repeating this step: </p>
+                    <p>Add 3 green beads and then 4 yellow beads onto the string.</p>
+                `,
+                directedQuestion: "If the finished bracelet has 16 yellow beads, how many green beads does it have?",
                 options: ["4", "9", "12", "16", "20"],
                 correctAnswer: "C"
             },
             {
                 id: 12,
                 type: "short",
-                text: "Here are the first five terms of a number sequence: 5, 10, 20, 40, 80, ... What is the difference between the 4th term and the 6th term in this sequence?",
+                text: "Here are the first five terms of a number sequence:<br><br><strong>5, 10, 20, 40, 80, ...</strong><br><br>What is the difference between the 4th term and the 6th term in this sequence?",
                 options: ["40", "60", "80", "100", "120"],
                 correctAnswer: "E"
             },
@@ -655,7 +659,7 @@
             {
                 id: 14,
                 type: "short",
-                text: "Jo has three cards showing the digits 6, 3, and 8. She uses all three cards to make different three-digit numbers. What is the difference between the largest three-digit number Jo can make, and the smallest three-digit number Jo can make?",
+                text: "Jo has three cards showing the digits 6, 3, and 8.<br><br><strong>She uses all three cards to make different three-digit numbers. </strong><br><br>What is the difference between the largest three-digit number Jo can make, and the smallest three-digit number Jo can make?",
                 options: ["396", "495", "594", "693", "792"],
                 correctAnswer: "B"
             }
