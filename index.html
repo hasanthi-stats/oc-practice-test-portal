@@ -666,12 +666,63 @@
                 directedQuestion: "What is the difference between the largest three-digit number Jo can make, and the smallest three-digit number Jo can make?",
                 options: ["396", "495", "594", "693", "792"],
                 correctAnswer: "B"
-            }
+            },
+            {
+                id: 15,
+                type: "short",
+                text: "Mason has 1200 points in a computer game.<br><br>He buys 6 tools, each costing 85 points. He also buys 1 vehicle.<br><br>He has 210 points left afterwards.<br><br>How many points did the vehicle cost?",
+                options: ["300", "420", "480", "510", "690"],
+                correctAnswer: "C"
+            },
+            {
+                id: 16,
+                type: "long",
+                stimulus: `
+                    <h3>Hiro's Circle Puzzle</h3>
+                    <p>In the five circles below, Hiro is going to write the numbers 1, 2, 3, 4, 5 once each.</p>
+                    <p>The three numbers in each line must add to 8.</p>
+                    <div class="graphic-container">
+                        <svg viewBox="0 0 200 200" width="100%" style="max-width: 220px; display: block; margin: 0 auto;">
+                            <!-- Connecting Diagonal Lines -->
+                            <line x1="40" y1="40" x2="160" y2="160" stroke="#1e293b" stroke-width="2.5" />
+                            <line x1="160" y1="40" x2="40" y2="160" stroke="#1e293b" stroke-width="2.5" />
+                            
+                            <!-- Four Outer Circles -->
+                            <circle cx="40" cy="40" r="20" fill="#ffffff" stroke="#1e293b" stroke-width="2.5" />
+                            <circle cx="160" cy="40" r="20" fill="#ffffff" stroke="#1e293b" stroke-width="2.5" />
+                            <circle cx="40" cy="160" r="20" fill="#ffffff" stroke="#1e293b" stroke-width="2.5" />
+                            <circle cx="160" cy="160" r="20" fill="#ffffff" stroke="#1e293b" stroke-width="2.5" />
+                            
+                            <!-- Center Circle with Thicker Ring -->
+                            <circle cx="100" cy="100" r="22" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+                        </svg>
+                    </div>
+                `,
+                directedQuestion: "What number must Hiro write in the middle circle?",
+                options: ["1", "2", "3", "4", "5"],
+                correctAnswer: "A"
+            },
+            {
+                id: 17,
+                type: "short",
+                text: "To feed 6 rabbits, a farm needs 18 kg of feed per week.<br><br>To feed 3 goats, the farm needs 18 kg of feed per week.<br><br>How much feed would the farm need to feed 9 rabbits and 6 goats for one week?",
+                options: ["27 kg", "36 kg", "45 kg", "54 kg", "63 kg"],
+                correctAnswer: "E"
+            },
+             {
+                id: 18,
+                type: "short",
+                text: "Alex and Priya had 16 cherries.<br><br>They ate all of them.<br><br>Priya ate three times as many cherries as Alex.<br><br>How many cherries did Priya eat?",
+                options: ["3", "4", "8", "12", "16"],
+                correctAnswer: "D"
+            },
+           
+
 
         ];
 
         // CONFIGURATION: Set the default questions for fallback (1-indexed question numbers)
-        const defaultQuestions = [11,12,13,14]; 
+        const defaultQuestions = [15,16,17,18]; 
         
         let questions = []; // Active list of 4 loaded questions
         let currentQ = 0;
@@ -715,7 +766,7 @@
             const inputVal = document.getElementById('passcode-field').value.trim();
             const errorMsg = document.getElementById('auth-error');
             
-            if (inputVal === '112233') {
+            if (inputVal === '000111') {
                 errorMsg.style.display = 'none';
                 document.getElementById('auth-screen').classList.remove('active-screen');
                 document.getElementById('landing-screen').classList.add('active-screen');
