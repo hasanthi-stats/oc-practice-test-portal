@@ -878,6 +878,34 @@
                 directedQuestion: "Balal wants to sell more umbrellas in week 2 than in week 1. What is the smallest number of umbrellas he needs to sell on Friday of week 2 to achieve this?",
                 options: ["2", "3", "4", "5", "6"],
                 correctAnswer: "B"
+            },
+            {
+                id: 23,
+                type: "short",
+                text: "To feed 8 penguins, a zoo needs a total of 24 kg of fish per week.<br><br>To feed 4 sea lions, the zoo needs a total of 24 kg of fish per week.<br><br>How much fish would the zoo need to feed 4 penguins and 8 sea lions for one week?",
+                options: ["12 kg", "24 kg", "48 kg", "60 kg", "64 kg"],
+                correctAnswer: "D"
+            },
+            {
+                id: 24,
+                type: "short",
+                text: "Jack and Sarah had 12 strawberries.<br><br>They ate all of them.<br><br>Sarah ate twice as many strawberries as Jack.<br><br>How many strawberries did Sarah eat?",
+                options: ["3", "4", "6", "8", "24"],
+                correctAnswer: "D"
+            },
+            {
+                id: 25,
+                type: "short",
+                text: "I am playing a computer game and I have 1000 points.<br><br>In the game, I buy 5 buildings, each costing 106 points. I also buy 1 farm.<br><br>I have 140 points left afterwards.<br><br>How many points did the farm cost?",
+                options: ["330", "356", "470", "610", "754"],
+                correctAnswer: "A"
+            },
+            {
+                id: 26,
+                type: "short",
+                text: "There were 72 people on a bus.<br><br>At a bus stop, some people got off and 15 people got on.<br><br>Then there were 68 people on the bus.<br><br>How many people got off at the bus stop?",
+                options: ["1", "4", "11", "19", "29"],
+                correctAnswer: "D"
             }
            
 
@@ -885,7 +913,7 @@
         ];
 
         // CONFIGURATION: Set the default questions for fallback (1-indexed question numbers)
-        const defaultQuestions = [19,20,21,22]; 
+        const defaultQuestions = [23,24,25,26]; 
         
         let questions = []; // Active list of 4 loaded questions
         let currentQ = 0;
@@ -929,7 +957,7 @@
             const inputVal = document.getElementById('passcode-field').value.trim();
             const errorMsg = document.getElementById('auth-error');
             
-            if (inputVal === '123123') {
+            if (inputVal === '112233') {
                 errorMsg.style.display = 'none';
                 document.getElementById('auth-screen').classList.remove('active-screen');
                 document.getElementById('landing-screen').classList.add('active-screen');
