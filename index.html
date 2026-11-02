@@ -1328,7 +1328,7 @@
         ];
 
         // CONFIGURATION: Set the default questions for fallback (1-indexed question numbers)
-        const defaultQuestions = [31,32,33,34]; 
+        const defaultQuestions = [35,36,37,38]; 
         
         let questions = []; // Active list of 4 loaded questions
         let currentQ = 0;
@@ -1372,7 +1372,7 @@
             const inputVal = document.getElementById('passcode-field').value.trim();
             const errorMsg = document.getElementById('auth-error');
             
-            if (inputVal === '565656') {
+            if (inputVal === '343434') {
                 errorMsg.style.display = 'none';
                 document.getElementById('auth-screen').classList.remove('active-screen');
                 document.getElementById('landing-screen').classList.add('active-screen');
